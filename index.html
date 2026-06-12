@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matias Menicucci — Desarrollador Web</title>
+<meta name="description" content="Portfolio de Matias Menicucci, técnico en programación especializado en desarrollo web.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #050505;
+  --bg2:     #0b0b0b;
+  --bg3:     #111;
+  --border:  #181818;
+  --border2: #222;
+  --text:    #f2f2f2;
+  --muted:   #333;
+  --muted2:  #666;
+  --accent:  #00ff88;
+  --accent2: #00cc6a;
+  --accent3: #b3ffe0;
+  --green:   #00ff88;
+  --font:    'Space Grotesk', sans-serif;
+  --max:     900px;
+  --pad:     clamp(20px, 5vw, 64px);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  padding: 18px var(--pad);
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(5,5,5,.93);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-size: 17px; font-weight: 700; color: var(--text);
+  text-decoration: none; letter-spacing: -.5px;
+}
+.nav-logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a {
+  color: var(--muted2); text-decoration: none; font-size: 12px;
+  font-weight: 500; transition: color .2s;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-status { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted2); font-weight: 500; }
+.nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: glow 2s infinite; }
+@keyframes glow {
+  0%,100% { box-shadow: 0 0 0 0 #00ff8855; }
+  50%      { box-shadow: 0 0 0 6px transparent; }
+}
+
+.hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+.hamburger span { display: block; width: 22px; height: 1.5px; background: var(--muted2); transition: all .25s; }
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.mobile-menu {
+  display: none; position: fixed; top: 57px; left: 0; right: 0; z-index: 49;
+  background: rgba(5,5,5,.98); border-bottom: 1px solid var(--border);
+  padding: 24px var(--pad); flex-direction: column; gap: 20px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a { color: var(--muted2); text-decoration: none; font-size: 13px; font-weight: 500; }
+.mobile-menu a:hover { color: var(--accent); }
+
+/* ── LAYOUT ── */
+section { padding: 100px var(--pad); max-width: calc(var(--max) + var(--pad)*2); margin: 0 auto; }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding-top: 130px; position: relative; overflow: hidden;
+}
+
+/* neon glow blob */
+#hero::before {
+  content: '';
+  position: absolute;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #00ff8815 0%, transparent 70%);
+  top: 20%; right: -100px;
+  pointer-events: none;
+}
+
+.hero-kicker {
+  font-size: 11px; font-weight: 600; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 20px;
+  opacity: 0; animation: fadeUp .5s .1s forwards;
+}
+h1 {
+  font-size: clamp(52px, 9vw, 96px);
+  font-weight: 700; line-height: .9;
+  letter-spacing: -3px; color: var(--text);
+  margin-bottom: 24px;
+  opacity: 0; animation: fadeUp .7s .25s forwards;
+}
+h1 em { color: var(--accent); font-style: normal; }
+.hero-desc {
+  font-size: 14px; font-weight: 300; color: var(--muted2);
+  max-width: 440px; line-height: 1.85; margin-bottom: 36px;
+  opacity: 0; animation: fadeUp .7s .4s forwards;
+}
+.hero-tags {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 40px;
+  opacity: 0; animation: fadeUp .7s .55s forwards;
+}
+.tag {
+  font-size: 11px; font-weight: 500; padding: 5px 13px;
+  border: 1px solid var(--border2); border-radius: 3px;
+  color: var(--muted2); transition: all .2s;
+}
+.tag.on { border-color: var(--accent); color: var(--accent); background: #00ff8808; }
+.tag:hover { border-color: var(--accent); color: var(--accent); }
+.hero-ctas {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp .7s .7s forwards;
+}
+.btn {
+  font-family: var(--font); font-size: 12px; font-weight: 600;
+  letter-spacing: .04em; padding: 11px 26px;
+  text-decoration: none; transition: all .2s;
+  display: inline-block; white-space: nowrap; border-radius: 3px;
+}
+.btn-fill { background: var(--accent); color: #050505; border: 1px solid var(--accent); }
+.btn-fill:hover { background: var(--accent3); border-color: var(--accent3); }
+.btn-ghost { background: transparent; color: var(--muted2); border: 1px solid var(--border2); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTION HEADER ── */
+.s-head { display: flex; align-items: center; gap: 16px; margin-bottom: 48px; }
+.s-num { font-size: 11px; font-weight: 600; color: var(--accent); letter-spacing: .1em; }
+.s-title { font-size: clamp(24px, 3.5vw, 30px); font-weight: 700; letter-spacing: -1px; color: var(--text); }
+.s-line { flex: 1; height: 1px; background: var(--border); }
+
+/* ── ABOUT ── */
+#about { border-top: 1px solid var(--border); }
+.about-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.about-copy { color: var(--muted2); font-size: 13px; font-weight: 400; line-height: 1.95; }
+.about-copy p { margin-bottom: 14px; }
+.about-copy p:last-child { margin-bottom: 0; }
+.about-copy strong { color: var(--text); font-weight: 600; }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.stat { background: var(--bg2); padding: 22px 18px; text-align: center; }
+.stat-n { font-size: 34px; font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: 5px; letter-spacing: -1px; }
+.stat-l { font-size: 9px; font-weight: 600; color: var(--muted2); letter-spacing: .14em; text-transform: uppercase; }
+
+/* ── PROJECTS ── */
+#projects { border-top: 1px solid var(--border); }
+.proj-grid { display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.proj {
+  background: var(--bg2); padding: 28px 30px;
+  position: relative; overflow: hidden; transition: background .2s;
+}
+.proj::after {
+  content: ''; position: absolute;
+  bottom: 0; left: 0; right: 0; height: 2px;
+  background: var(--accent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .35s ease;
+}
+.proj:hover { background: var(--bg3); }
+.proj:hover::after { transform: scaleX(1); }
+
+.proj-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 12px; flex-wrap: wrap; }
+.proj-num { font-size: 10px; font-weight: 600; color: var(--accent); letter-spacing: .12em; }
+.proj-btns { display: flex; gap: 8px; }
+.proj-btn {
+  font-size: 10px; font-weight: 600; color: var(--muted2);
+  text-decoration: none; letter-spacing: .06em;
+  border: 1px solid var(--border2); padding: 3px 10px;
+  border-radius: 3px; transition: all .2s;
+}
+.proj-btn:hover { color: var(--accent); border-color: var(--accent); }
+.proj-name { font-size: clamp(16px, 2.2vw, 19px); font-weight: 700; color: var(--text); margin-bottom: 8px; letter-spacing: -.4px; }
+.proj-desc { color: var(--muted2); font-size: 12px; font-weight: 400; line-height: 1.85; margin-bottom: 16px; }
+.proj-tech { display: flex; gap: 7px; flex-wrap: wrap; }
+.tech {
+  font-size: 10px; font-weight: 500; padding: 2px 9px;
+  background: var(--bg); border: 1px solid var(--border2);
+  border-radius: 3px; color: var(--muted2);
+}
+
+/* ── SKILLS ── */
+#skills { border-top: 1px solid var(--border); }
+.skills-wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+@media (max-width: 640px) { .skills-wrap { grid-template-columns: repeat(2, 1fr); } }
+.skill-group { background: var(--bg2); padding: 24px; }
+.sg-title { font-size: 10px; font-weight: 600; color: var(--accent); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 16px; }
+.sk {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 0; border-bottom: 1px solid var(--border);
+  font-size: 12px; font-weight: 400; color: var(--muted2);
+}
+.sk:last-child { border-bottom: none; }
+.sk::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+/* ── CONTACT ── */
+#contact { border-top: 1px solid var(--border); }
+.contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+.contact-info h3 {
+  font-size: clamp(28px, 4vw, 40px); font-weight: 700;
+  letter-spacing: -1.5px; color: var(--text); margin-bottom: 12px; line-height: 1.05;
+}
+.contact-info h3 em { color: var(--accent); font-style: normal; }
+.contact-info p { color: var(--muted2); font-size: 13px; font-weight: 400; line-height: 1.85; margin-bottom: 28px; }
+.contact-detail {
+  display: flex; align-items: center; gap: 14px;
+  padding: 11px 0; border-bottom: 1px solid var(--border);
+}
+.contact-detail:first-of-type { border-top: 1px solid var(--border); }
+.cd-label { font-size: 9px; font-weight: 600; color: var(--muted2); letter-spacing: .14em; text-transform: uppercase; min-width: 52px; }
+.contact-detail a, .contact-detail span { font-size: 12px; color: var(--text); font-weight: 400; text-decoration: none; transition: color .2s; }
+.contact-detail a:hover { color: var(--accent); }
+
+.contact-form { display: flex; flex-direction: column; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 9px; font-weight: 600; color: var(--accent); letter-spacing: .14em; text-transform: uppercase; }
+.field input, .field textarea {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 3px; padding: 10px 13px;
+  font-family: var(--font); font-size: 12px; font-weight: 400;
+  color: var(--text); outline: none; transition: border-color .2s; resize: none; width: 100%;
+}
+.field input::placeholder, .field textarea::placeholder { color: var(--muted); }
+.field input:focus, .field textarea:focus { border-color: var(--accent); }
+.field textarea { min-height: 100px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.form-note { font-size: 10px; color: var(--muted2); }
+.btn-send {
+  font-family: var(--font); font-size: 11px; font-weight: 600; letter-spacing: .06em;
+  padding: 10px 24px; background: var(--accent); color: #050505;
+  border: 1px solid var(--accent); border-radius: 3px; cursor: pointer; transition: all .2s;
+}
+.btn-send:hover { background: var(--accent3); border-color: var(--accent3); }
+.form-success { display: none; font-size: 11px; font-weight: 600; color: var(--accent); letter-spacing: .06em; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 22px var(--pad);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 8px;
+  font-size: 10px; font-weight: 400; color: var(--muted2);
+  max-width: calc(var(--max) + var(--pad)*2); margin: 0 auto;
+}
+
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .nav-links, .nav-status { display: none; }
+  .hamburger { display: flex; }
+  .about-wrap { grid-template-columns: 1fr; gap: 32px; }
+  .contact-wrap { grid-template-columns: 1fr; gap: 36px; }
+  .form-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  section { padding: 72px var(--pad); }
+  h1 { letter-spacing: -1.5px; }
+  .form-bottom { flex-direction: column; align-items: flex-start; }
+  footer { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-logo">MM<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">sobre mí</a></li>
+    <li><a href="#projects">proyectos</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#contact">contacto</a></li>
+  </ul>
+  <div class="nav-status"><div class="nav-dot"></div>disponible</div>
+  <button class="hamburger" id="ham" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about"    onclick="closeMobile()">sobre mí</a>
+  <a href="#projects" onclick="closeMobile()">proyectos</a>
+  <a href="#skills"   onclick="closeMobile()">skills</a>
+  <a href="#contact"  onclick="closeMobile()">contacto</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-kicker">Desarrollador web fullstack</p>
+  <h1>Matias<br><em>Menicucci</em></h1>
+  <p class="hero-desc">
+    Técnico en programación. Construyo aplicaciones web
+    funcionales y bien pensadas, de la base de datos
+    a la interfaz de usuario.
+  </p>
+  <div class="hero-tags">
+    <span class="tag on">Python</span>
+    <span class="tag on">JavaScript</span>
+    <span class="tag">Node.js</span>
+    <span class="tag">SQL</span>
+    <span class="tag">IA integrada</span>
+  </div>
+  <div class="hero-ctas">
+    <a href="#projects" class="btn btn-fill">ver proyectos</a>
+    <a href="#contact"  class="btn btn-ghost">contacto</a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="s-head">
+    <span class="s-num">01</span>
+    <h2 class="s-title">sobre mí</h2>
+    <div class="s-line"></div>
+  </div>
+  <div class="about-wrap">
+    <div class="about-copy">
+      <p>Soy <strong>Matias Menicucci</strong>, desarrollador web con formación técnica especializada en programación. Me dedico a construir aplicaciones completas que resuelven problemas reales.</p>
+      <p>Trabajo en el stack completo: autenticación, bases de datos, APIs, interfaces responsivas e integración de <strong>inteligencia artificial</strong>. Cada proyecto tiene un objetivo claro y está pensado para ser escalable.</p>
+      <p>Me interesa crear productos sólidos técnicamente y simples de usar. El código limpio y la buena experiencia de usuario no son opuestos.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n">4</div><div class="stat-l">Proyectos</div></div>
+      <div class="stat"><div class="stat-n">IA</div><div class="stat-l">Integrada</div></div>
+      <div class="stat"><div class="stat-n">Tec</div><div class="stat-l">Secundario</div></div>
+      <div class="stat"><div class="stat-n">∞</div><div class="stat-l">En progreso</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="s-head">
+    <span class="s-num">02</span>
+    <h2 class="s-title">proyectos</h2>
+    <div class="s-line"></div>
+  </div>
+  <div class="proj-grid">
+
+    <div class="proj">
+      <div class="proj-top">
+        <span class="proj-num">001</span>
+        <div class="proj-btns">
+          <a href="https://github.com/lionelmedina1200/biblioteca-ia.git" target="_blank" class="proj-btn">github ↗</a>
+          <a href="https://biblioteca-ia-y3d4.onrender.com/" target="_blank" class="proj-btn">live ↗</a>
+        </div>
+      </div>
+      <p class="proj-name">Biblioteca IA</p>
+      <p class="proj-desc">Sistema de gestión de biblioteca escolar con catálogo digital, préstamos y reservas, y autenticación con Google OAuth. Su núcleo es un asistente de inteligencia artificial que permite buscar libros por título, autor, categoría o tema mediante conversación en lenguaje natural. Incluye roles diferenciados para alumnos y bibliotecaria, panel de check-in y dashboard administrativo.</p>
+      <div class="proj-tech">
+        <span class="tech">Python</span>
+        <span class="tech">IA / Chatbot</span>
+        <span class="tech">Google OAuth</span>
+        <span class="tech">SQL</span>
+        <span class="tech">Render</span>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-top">
+        <span class="proj-num">002</span>
+        <div class="proj-btns">
+          <a href="https://github.com/lionelmedina1200/fichero.git" target="_blank" class="proj-btn">github ↗</a>
+        </div>
+      </div>
+      <p class="proj-name">Fichero Digital con QR</p>
+      <p class="proj-desc">Solución web para el control de asistencia en cursos técnicos. Cada alumno tiene un código QR único que se escanea con una app complementaria al ingresar y salir, registrando automáticamente las horas acumuladas. Reemplaza el fichero en papel y permite al docente ver el estado de asistencia en tiempo real desde cualquier dispositivo.</p>
+      <div class="proj-tech">
+        <span class="tech">JavaScript</span>
+        <span class="tech">HTML / CSS</span>
+        <span class="tech">QR Scanner</span>
+        <span class="tech">Responsive</span>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-top">
+        <span class="proj-num">003</span>
+        <div class="proj-btns">
+          <a href="https://agendaflowdemo.vercel.app/" target="_blank" class="proj-btn">live ↗</a>
+        </div>
+      </div>
+      <p class="proj-name">AgendaFlow</p>
+      <p class="proj-desc">Sistema B2B de gestión de turnos con inteligencia artificial. Automatiza reservas y dispara recordatorios por WhatsApp, reduciendo significativamente el ausentismo. Incluye dashboard operativo, integración con MercadoPago, aislamiento de datos con PostgreSQL Row Level Security y un microservicio asíncrono en Node.js para el motor de mensajería.</p>
+      <div class="proj-tech">
+        <span class="tech">Node.js</span>
+        <span class="tech">IA integrada</span>
+        <span class="tech">PostgreSQL / RLS</span>
+        <span class="tech">WhatsApp API</span>
+        <span class="tech">MercadoPago</span>
+        <span class="tech">Vercel</span>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-top">
+        <span class="proj-num">004</span>
+        <div class="proj-btns">
+          <a href="https://mecanizados-web-ituzaingo.vercel.app/" target="_blank" class="proj-btn">live ↗</a>
+        </div>
+      </div>
+      <p class="proj-name">Mecanizado Ituzaingó S.A.</p>
+      <p class="proj-desc">Sitio web institucional para una empresa industrial con más de 45 años de trayectoria en fabricación de piezas de precisión. Presenta mecanizado CNC, estampado y corte láser con certificación ISO 9001:2015. Incluye formulario de cotización y está optimizado para SEO y posicionamiento en buscadores.</p>
+      <div class="proj-tech">
+        <span class="tech">HTML / CSS</span>
+        <span class="tech">JavaScript</span>
+        <span class="tech">SEO</span>
+        <span class="tech">Diseño institucional</span>
+        <span class="tech">Vercel</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="s-head">
+    <span class="s-num">03</span>
+    <h2 class="s-title">habilidades</h2>
+    <div class="s-line"></div>
+  </div>
+  <div class="skills-wrap">
+    <div class="skill-group">
+      <p class="sg-title">Lenguajes</p>
+      <div class="sk">Python</div>
+      <div class="sk">JavaScript</div>
+      <div class="sk">HTML / CSS</div>
+      <div class="sk">SQL</div>
+    </div>
+    <div class="skill-group">
+      <p class="sg-title">Backend</p>
+      <div class="sk">Node.js</div>
+      <div class="sk">APIs REST</div>
+      <div class="sk">PostgreSQL</div>
+      <div class="sk">OAuth / Sesiones</div>
+    </div>
+    <div class="skill-group">
+      <p class="sg-title">Frontend</p>
+      <div class="sk">HTML semántico</div>
+      <div class="sk">CSS responsive</div>
+      <div class="sk">JavaScript DOM</div>
+      <div class="sk">UI / UX</div>
+    </div>
+    <div class="skill-group">
+      <p class="sg-title">Herramientas</p>
+      <div class="sk">Git & GitHub</div>
+      <div class="sk">Vercel / Render</div>
+      <div class="sk">QR / Escaneo</div>
+      <div class="sk">IA integrada</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="s-head">
+    <span class="s-num">04</span>
+    <h2 class="s-title">contacto</h2>
+    <div class="s-line"></div>
+  </div>
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <h3>¿<em>hablamos</em>?</h3>
+      <p>Estoy disponible para proyectos, colaboraciones o sumar a un equipo. Completá el formulario y te respondo a la brevedad.</p>
+      <div class="contact-detail">
+        <span class="cd-label">Email</span>
+        <a href="mailto:matiasmenicucci07@icloud.com">matiasmenicucci07@icloud.com</a>
+      </div>
+      <div class="contact-detail">
+        <span class="cd-label">País</span>
+        <span>Argentina</span>
+      </div>
+      <div class="contact-detail">
+        <span class="cd-label">Estado</span>
+        <span style="color:var(--accent);">Disponible ✓</span>
+      </div>
+    </div>
+    <div class="contact-form">
+      <div class="form-row">
+        <div class="field">
+          <label>Nombre</label>
+          <input type="text" id="fname" placeholder="Tu nombre" autocomplete="off">
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="femail" placeholder="tu@email.com" autocomplete="off">
+        </div>
+      </div>
+      <div class="field">
+        <label>Asunto</label>
+        <input type="text" id="fsubject" placeholder="¿De qué se trata?" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Mensaje</label>
+        <textarea id="fmessage" placeholder="Contame tu idea o proyecto..."></textarea>
+      </div>
+      <div class="form-bottom">
+        <span class="form-note">Te respondo a la brevedad.</span>
+        <div>
+          <button class="btn-send" onclick="sendForm()">Enviar mensaje →</button>
+          <div class="form-success" id="formSuccess">✓ ¡Hablamos pronto!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Matias Menicucci</span>
+  <span>técnico en programación · Argentina</span>
+  <span>hecho con 🖤</span>
+</footer>
+
+<script>
+  function sendForm() {
+    const name    = document.getElementById('fname').value.trim();
+    const email   = document.getElementById('femail').value.trim();
+    const subject = document.getElementById('fsubject').value.trim();
+    const msg     = document.getElementById('fmessage').value.trim();
+    if (!name || !email || !msg) { alert('Por favor completá nombre, email y mensaje.'); return; }
+    window.location.href = `mailto:matiasmenicucci07@icloud.com?subject=${encodeURIComponent(subject||'Contacto desde portfolio')}&body=${encodeURIComponent('Nombre: '+name+'\nEmail: '+email+'\n\n'+msg)}`;
+    document.getElementById('formSuccess').style.display = 'block';
+  }
+
+  const ham = document.getElementById('ham');
+  const mob = document.getElementById('mobileMenu');
+  ham.addEventListener('click', () => { ham.classList.toggle('open'); mob.classList.toggle('open'); });
+  function closeMobile() { ham.classList.remove('open'); mob.classList.remove('open'); }
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
+    });
+  }, { threshold: 0.06 });
+  document.querySelectorAll('.proj, .skill-group, .stat').forEach(el => {
+    el.style.opacity='0'; el.style.transform='translateY(16px)';
+    el.style.transition='opacity .5s ease, transform .5s ease';
+    obs.observe(el);
+  });
+</script>
+</body>
+</html>
